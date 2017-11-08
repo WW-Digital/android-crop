@@ -303,7 +303,13 @@ public class CropImageActivity extends MonitoredActivity {
         try {
             croppedImage = decodeRegionCrop(r, outWidth, outHeight);
             if (extraBitmap !=null) {
-                Canvas comboImage = new Canvas(combinedImage);
+                final int newOutWidth = extraBitmap.getWidth() > outWidth ?
+                        extraBitmap.getWidth() * 3 : outWidth;
+                final int newOutHeight = extraBitmap.getHeight() > outHeight ?
+                        extraBitmap.getHeight() * 3 : outHeight;
+                combinedImage = Bitmap.createBitmap(newOutWidth, newOutHeight, Bitmap.Config.ARGB_8888);
+                final Canvas comboImage = new Canvas(combinedImage);
+                croppedImage = Bitmap.createScaledBitmap(croppedImage, newOutWidth, newOutHeight, false);
                 comboImage.drawBitmap(croppedImage, 0, 0, null);
                 final int maxSize = croppedImage.getWidth() / 3;
                 extraBitmap = Bitmap.createScaledBitmap(extraBitmap, maxSize, maxSize, false);

@@ -1,10 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
-apply plugin: 'git-repo'
 apply plugin: 'maven-publish'
 
 archivesBaseName = 'android-crop'
-version = '1.0.1-WW'
+version = '1.0.2-WW'
 def versionCodeInt = 7
 
 android {
@@ -104,25 +103,23 @@ publishing {
 
     repositories {
         maven {
-            url "file://${gitPublishConfig.home}/${gitPublishConfig.org}/${gitPublishConfig.repo}/releases"
+            url "s3://androidrepos/releases"
+            credentials(AwsCredentials) {
+                accessKey WW_AWS_ACCESS_KEY
+                secretKey WW_SECRET_KEY
+            }
         }
+        mavenLocal()
     }
 
     publish.dependsOn assembleRelease
 
 }
 
-gitPublishConfig {
-    org = 'WW-Digital'
-    repo = 'android-gradle-repo'
-}
-
 repositories {
     flatDir {
         dirs 'aar'
     }
-
-    github("${gitPublishConfig.org}", "${gitPublishConfig.repo}")
 
     maven {
         url 'https://repo.commonsware.com.s3.amazonaws.com'
