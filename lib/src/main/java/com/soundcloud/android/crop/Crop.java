@@ -26,6 +26,8 @@ public class Crop {
         String ASPECT_Y = "aspect_y";
         String MAX_X = "max_x";
         String MAX_Y = "max_y";
+        String MIN_X = "min_x";
+        String MIN_Y = "min_y";
         String AS_PNG = "as_png";
         String ERROR = "error";
         String BITMAP_PATH = "bitmap_path";
@@ -79,6 +81,18 @@ public class Crop {
     public Crop withMaxSize(int width, int height) {
         cropIntent.putExtra(Extra.MAX_X, width);
         cropIntent.putExtra(Extra.MAX_Y, height);
+        return this;
+    }
+
+    /**
+     * Set minimum crop size
+     *
+     * @param width  Min width
+     * @param height Min height
+     */
+    public Crop withMinSize(int width, int height) {
+        cropIntent.putExtra(Extra.MIN_X, width);
+        cropIntent.putExtra(Extra.MIN_Y, height);
         return this;
     }
 

@@ -58,6 +58,8 @@ public class CropImageActivity extends MonitoredActivity {
     // Output image
     private int maxX;
     private int maxY;
+    private int minX;
+    private int minY;
     private int exifRotation;
     private boolean saveAsPng;
 
@@ -130,6 +132,8 @@ public class CropImageActivity extends MonitoredActivity {
             aspectY = extras.getInt(Crop.Extra.ASPECT_Y);
             maxX = extras.getInt(Crop.Extra.MAX_X);
             maxY = extras.getInt(Crop.Extra.MAX_Y);
+            minX = extras.getInt(Crop.Extra.MIN_X);
+            minY = extras.getInt(Crop.Extra.MIN_Y);
             saveAsPng = extras.getBoolean(Crop.Extra.AS_PNG, false);
             saveUri = extras.getParcelable(MediaStore.EXTRA_OUTPUT);
         }
@@ -296,6 +300,37 @@ public class CropImageActivity extends MonitoredActivity {
             } else {
                 outWidth = maxX;
                 outHeight = (int) ((float) maxX / ratio + .5f);
+            }
+        }
+
+        if (minX > 0 && minY > 0 && (width < minX || height < minY)) {
+            float ratio = (float) width / (float) height;
+
+            if ((float) minX / (float) minY > ratio) {
+                outHeight = minY;
+                outWidth = (int) ((float) minY * ratio + .5f);
+
+                if (outWidth < minY) {
+                    outWidth = minY;
+                }
+            } else {
+                outWidth = minX;
+                outHeight = (int) ((float) minX / ratio + .5f);
+
+                if (outHeight < minX) {
+                    outHeight = minX;
+                }
+            }
+
+            final int imageWidth = rotateBitmap.getWidth();
+            final int imageHeight = rotateBitmap.getHeight();
+
+            if (outWidth > imageWidth) {
+                outWidth = imageWidth;
+            }
+
+            if (outHeight > imageHeight) {
+                outHeight = imageHeight;
             }
         }
 
