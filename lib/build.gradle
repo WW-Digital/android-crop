@@ -3,7 +3,7 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 
 archivesBaseName = 'android-crop'
-version = '1.0.3-WW'
+version = '1.0.4-WW'
 def versionCodeInt = 7
 
 android {

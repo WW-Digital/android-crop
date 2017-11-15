@@ -241,13 +241,19 @@ public class CropImageActivity extends MonitoredActivity {
             HighlightView hv = new HighlightView(imageView);
             final int width = rotateBitmap.getWidth();
             final int height = rotateBitmap.getHeight();
+            int cropWidth = 0;
+            int cropHeight = 0;
 
             Rect imageRect = new Rect(0, 0, width, height);
 
-            // Make the default size about 4/5 of the width or height
-            int cropWidth = Math.min(width, height) * 4 / 5;
-            @SuppressWarnings("SuspiciousNameCombination")
-            int cropHeight = cropWidth;
+            if (maxX > 0 && maxY > 0) {
+                cropWidth = maxX;
+                cropHeight = maxY;
+            } else {
+                // Make the default size about 4/5 of the width or height
+                cropWidth = Math.min(width, height) * 4 / 5;
+                cropHeight = cropWidth;
+            }
 
             if (aspectX != 0 && aspectY != 0) {
                 if (aspectX > aspectY) {
