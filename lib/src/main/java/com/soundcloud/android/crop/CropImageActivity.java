@@ -249,6 +249,15 @@ public class CropImageActivity extends MonitoredActivity {
             if (maxX > 0 && maxY > 0) {
                 cropWidth = maxX;
                 cropHeight = maxY;
+
+                if (cropWidth > width) {
+                    cropWidth = width;
+                }
+
+                if (cropHeight > height) {
+                    cropHeight = height;
+                }
+
             } else {
                 // Make the default size about 4/5 of the width or height
                 cropWidth = Math.min(width, height) * 4 / 5;
@@ -267,7 +276,7 @@ public class CropImageActivity extends MonitoredActivity {
             int y = (height - cropHeight) / 2;
 
             RectF cropRect = new RectF(x, y, x + cropWidth, y + cropHeight);
-            hv.setup(imageView.getUnrotatedMatrix(), imageRect, cropRect, aspectX != 0 && aspectY != 0, extraBitmap);
+            hv.setup(imageView.getUnrotatedMatrix(), imageRect, cropRect, aspectX != 0 && aspectY != 0, extraBitmap, minX, minY);
             imageView.add(hv);
         }
 
