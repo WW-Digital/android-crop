@@ -51,7 +51,14 @@ public class MainActivity extends Activity {
 
     private void beginCrop(Uri source) {
         Uri destination = Uri.fromFile(new File(getCacheDir(), "cropped"));
-        Crop.of(source, destination).asSquare().start(this);
+        Crop crop = Crop.of(source, destination);
+        crop.withAspect(502, 1024);
+
+        //We are setting both width and hight to the size of the width so before and after are at minimum a square
+        crop.withMinSize(320, 320);
+        crop.withMaxSize(502, 1024);
+
+        crop.start(this);
     }
 
     private void handleCrop(int resultCode, Intent result) {

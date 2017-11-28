@@ -29,7 +29,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Region;
 import android.os.Build;
-import android.util.TypedValue;
+import android.util.*;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -71,6 +72,8 @@ class HighlightView {
     private boolean showThirds;
     private boolean showCircle;
     private int highlightColor;
+    private int minimumWidth;
+    private int minimumHeight;
 
     private ModifyMode modifyMode = ModifyMode.None;
     private HandleMode handleMode = HandleMode.Changing;
@@ -100,13 +103,15 @@ class HighlightView {
         }
     }
 
-    public void setup(Matrix m, Rect imageRect, RectF cropRect, boolean maintainAspectRatio, Bitmap extraBitmap) {
+    public void setup(Matrix m, Rect imageRect, RectF cropRect, boolean maintainAspectRatio, Bitmap extraBitmap, int minimumWidth, int minimumHeight) {
         matrix = new Matrix(m);
 
         this.extraBitmap = extraBitmap;
         this.cropRect = cropRect;
         this.imageRect = new RectF(imageRect);
         this.maintainAspectRatio = maintainAspectRatio;
+        this.minimumWidth = minimumWidth;
+        this.minimumHeight = minimumHeight;
 
         initialAspectRatio = this.cropRect.width() / this.cropRect.height();
         drawRect = computeLayout();
@@ -303,6 +308,27 @@ class HighlightView {
             // Convert to image space before sending to growBy()
             float xDelta = dx * (cropRect.width() / r.width());
             float yDelta = dy * (cropRect.height() / r.height());
+
+            if (cropRect.width() <= minimumWidth) {
+                if (dx < 0.0 || dx > 0.0) {
+                    int newDx =  (int)((dx < 0.0) ? (dx * -1) : dx);
+
+                    if (cropRect.width() + newDx < minimumWidth) {
+                        return;
+                    }
+                }
+            }
+
+            if (cropRect.height() <= minimumHeight) {
+                if (dy < 0.0 || dy > 0.0) {
+                    int newDy =  (int)((dy < 0.0) ? (dy * -1) : dy);
+
+                    if (cropRect.height() + newDy < minimumHeight) {
+                        return;
+                    }
+                }
+            }
+
             growBy((((edge & GROW_LEFT_EDGE) != 0) ? -1 : 1) * xDelta,
                     (((edge & GROW_TOP_EDGE) != 0) ? -1 : 1) * yDelta);
         }
